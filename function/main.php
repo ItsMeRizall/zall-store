@@ -67,7 +67,7 @@ function freshdb() {
     );
 
     foreach ($contacts as $c) {
-        Contact::insert([
+        Product::insert([
                 'phone_number' => $c[0],
                 'owner' => $c[1],
                 'inserted_at'=> $c[2],

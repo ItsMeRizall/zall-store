@@ -20,10 +20,10 @@ class AuthController {
         ]);
         if ($user) {
             unset($user['password']);
-            $_SESSION['user'] = $user;
-            header('Location: '.BASEURL.'dashboard');
-        }
-        else {
+                $_SESSION['user'] = $user;
+                header('Location: '.BASEURL.'dashboard');
+            }
+            else {
             header('Location: '.BASEURL.'login?failed=true');
         }
     }
@@ -32,10 +32,13 @@ class AuthController {
         $post = array_map('htmlspecialchars', $_POST);
 
         $user = User::register([
-            'name' => $post['name'], 
+            'username' => $post['username'], 
             'email' => $post['email'], 
             'password' => $post['password']
         ]);
+
+        var_dump($post);
+        var_dump($user);
 
         if ($user) {
             header('Location: '.BASEURL.'login');

@@ -1,8 +1,8 @@
 <?php
 
-include_once 'model/contact_model.php';
+include_once 'model/product_model.php';
 
-class ContactController {
+class ProductController {
     static function add() {
         if (!isset($_SESSION['user'])) {
             header('Location: '.BASEURL.'login?auth=false');
@@ -20,17 +20,17 @@ class ContactController {
         }
         else {
             $post = array_map('htmlspecialchars', $_POST);
-            $contact = Contact::insert([
+            $product = Product::insert([
                 'phone_number' => $post['phone_number'], 
                 'owner' => $post['owner'],
                 'user_fk' => $_SESSION['user']['id']
             ]);
             
-            if ($contact) {
+            if ($product) {
                 header('Location: '.BASEURL.'dashboard/contacts');
             }
             else {
-                header('Location: '.BASEURL.'contacts/add?addFailed=true');
+                header('Location: '.BASEURL.'product/add?addFailed=true');
             }
         }
     }
@@ -43,7 +43,7 @@ class ContactController {
         else {
             view('dash_page/layout', [
                 'url' => 'view/contact_crud_page/edit',
-                'contact' => Contact::select($_GET['id'])
+                'product' => Product::select($_GET['id'])
             ]);
         }
     }
@@ -55,16 +55,16 @@ class ContactController {
         }
         else {
             $post = array_map('htmlspecialchars', $_POST);
-            $contact = Contact::update([
+            $contact = Product::update([
                 'id' => $_GET['id'],
                 'phone_number' => $post['phone_number'],
                 'owner' => $post['owner']
             ]);
             if ($contact) {
-                header('Location: '.BASEURL.'dashboard/contacts');
+                header('Location: '.BASEURL.'dashboard/product');
             }
             else {
-                header('Location: '.BASEURL.'contacts/edit?id='.$_GET['id'].'&editFailed=true');
+                header('Location: '.BASEURL.'product/edit?id='.$_GET['id'].'&editFailed=true');
             }
         }
     }
@@ -75,12 +75,12 @@ class ContactController {
             exit;
         }
         else {
-            $contact = Contact::delete($_GET['id']);
+            $contact = Product::delete($_GET['id']);
             if ($contact) {
-                header('Location: '.BASEURL.'dashboard/contacts');
+                header('Location: '.BASEURL.'dashboard/product');
             }
             else {
-                header('Location: '.BASEURL.'dashboard/contacts?removeFailed=true');
+                header('Location: '.BASEURL.'dashboard/product?removeFailed=true');
             }
         }
     }
@@ -91,7 +91,7 @@ class ContactController {
             exit;
         }
         else {
-            $contacts = Contact::rawQuery("SELECT COUNT(c1.id) as user_count, c2.city as user_city FROM contacts as c1, cities as c2 WHERE c1.city_fk = c2.id GROUP BY user_city;");
+            $contacts = Product::rawQuery("SELECT COUNT(c1.id) as user_count, c2.city as user_city FROM contacts as c1, cities as c2 WHERE c1.city_fk = c2.id GROUP BY user_city;");
             if ($contacts) {
                 view('component/report', ['contacts' => $contacts]);
             }

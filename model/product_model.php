@@ -1,8 +1,8 @@
 <?php
-class Contact {
+class Product {
     static function select($id='') {
         global $conn;
-        $sql = "SELECT * FROM contacts";
+        $sql = "SELECT * FROM product";
         if ($id!='') {
             $sql .= " WHERE id = $id";
         }
@@ -21,10 +21,9 @@ class Contact {
     static function insert($data=[]) {
         extract($data);
         global $conn;
-        $inserted_at = date('Y-m-d H:i:s', strtotime('now'));
-        $sql = "INSERT INTO contacts SET phone_number = ?, owner = ?, inserted_at = ?, user_fk = ?";
+        $sql = "INSERT INTO product SET name_product = ?, price = ?, stock = ?, type_product = ?, image_product = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssi', $phone_number, $owner, $inserted_at, $user_fk);
+        $stmt->bind_param('siiss', $phone_number, $owner, $inserted_at, $user_fk);
         $stmt->execute();
 
         $result = $stmt->affected_rows > 0 ? true : false;

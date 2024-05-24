@@ -3,34 +3,106 @@
 include_once 'config/conn.php';
 
 class User {
-    static function login($data=[]) {
-        extract($data);
-        global $conn;
 
+    static function login($data=[]) {
+        global $conn;
+        if (!isset($data['email'], $data['password'])) {
+            die('Error: Data is missing.');
+        };
+        $email = $data['email'];
+        $password = $data['password'];
+    
+        // Tambahkan nama tabel yang sesuai di sini
         $result = $conn->query("SELECT * FROM users WHERE email = '$email'");
-        if ($result = $result->fetch_assoc()) {
-            $hashedPassword = $result['password'];
-            $verify = password_verify($password, $hashedPassword);
-            if ($verify) { return $result; }
-            else { return false; }
+    
+        if (!$result) {
+            // Gagal mengeksekusi query, mungkin ada kesalahan SQL
+            die('Error: ' . $conn->error);
         }
-        else { return false; }
+    
+        // Periksa apakah ada baris yang cocok dengan email yang diberikan
+        if ($result->num_rows > 0) {
+            // Ambil hasil query
+            $row = $result->fetch_assoc();
+            $hashedPassword = $row['password'];
+    
+            // Verifikasi password
+            $verify = password_verify($password, $hashedPassword);
+    
+            if ($verify) {
+                // Jika password cocok, kembalikan baris dari database
+                return $row;
+            } else {
+                // Jika password tidak cocok, kembalikan false
+                return false;
+            }
+        } else {
+            // Jika tidak ada baris yang cocok dengan email yang diberikan, kembalikan false
+            return false;
+        }
     }
+    
+
+    // static function register($data=[]) {
+    //     extract($data);
+    //     global $conn;
+
+
+        
+    //     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    //     $sql = "INSERT INTO users SET username = ?, email = ?, password = ? ";
+    //     $stmt = $conn->prepare($sql);
+    //     $stmt->bind_param('sss', $name, $email, $hashedPassword);
+    //     $stmt->execute();
+
+    //     var_dump($hashedPassword);
+
+    //     if (!$stmt) {
+    //         die('Error: ' . $conn->error);
+    //     }        
+
+    //     var_dump($data);
+
+    //     $result = $stmt->affected_rows > 0 ? true : false;
+    //     return $result;
+    // }
 
     static function register($data=[]) {
-        extract($data);
         global $conn;
-        
-        $inserted_at = date('Y-m-d H:i:s', strtotime('now'));
+    
+        // Periksa apakah data yang diperlukan telah diberikan
+        if (!isset($data['username'], $data['email'], $data['password'])) {
+            die('Error: Data is missing.');
+        }
+    
+        // Dapatkan data dari parameter
+        $name = $data['username'];
+        $email = $data['email'];
+        $password = $data['password'];
+    
+        // Hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users SET name = ?, email = ?, password = ?, inserted_at = ?";
+    
+        // Buat dan persiapkan statement SQL
+        $sql = "INSERT INTO users SET username = ?, email = ?, password = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('ssss', $name, $email, $hashedPassword, $inserted_at);
+    
+        // Periksa apakah statement berhasil dipersiapkan
+        if (!$stmt) {
+            die('Error: ' . $conn->error);
+        }
+    
+        // Bind parameters
+        $stmt->bind_param('sss', $name, $email, $hashedPassword);
+    
+        // Eksekusi statement
         $stmt->execute();
-
+    
         $result = $stmt->affected_rows > 0 ? true : false;
+    
         return $result;
     }
+    
 
     static function getPassword($email) { 
         global $conn;
