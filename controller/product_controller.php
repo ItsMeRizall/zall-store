@@ -13,27 +13,35 @@ class ProductController {
         }
     }
 
-    static function saveAdd() {
+
+    static function saveProduct() {
         if (!isset($_SESSION['user'])) {
             header('Location: '.BASEURL.'login?auth=false');
             exit;
         }
         else {
             $post = array_map('htmlspecialchars', $_POST);
+            $fileName = $_FILES['product_image']['name'];
+            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+
+            $newFileName = 'product_' . date('YmdHis') . '.' . $fileExt;
+
             $product = Product::insert([
-                'phone_number' => $post['phone_number'], 
-                'owner' => $post['owner'],
-                'user_fk' => $_SESSION['user']['id']
+                'name' => $post['name_product'], 
+                'price' => $post['price'],
+                'stock' => $post['stock'],
+                'type_product' => $post['type_product'],
             ]);
             
             if ($product) {
-                header('Location: '.BASEURL.'dashboard/contacts');
+                header('Location: '.BASEURL.'dashboard/');
             }
             else {
-                header('Location: '.BASEURL.'product/add?addFailed=true');
+                header('Location: '.BASEURL.'dashboard/add_product?addFailed=true');
             }
         }
     }
+
 
     static function edit() {
         if (!isset($_SESSION['user'])) {
@@ -48,20 +56,22 @@ class ProductController {
         }
     }
 
-    static function saveEdit() {
+    static function saveEditProduct() {
         if (!isset($_SESSION['user'])) {
             header('Location: '.BASEURL.'login?auth=false');
             exit;
         }
         else {
             $post = array_map('htmlspecialchars', $_POST);
-            $contact = Product::update([
+            $product = Product::update([
                 'id' => $_GET['id'],
-                'phone_number' => $post['phone_number'],
-                'owner' => $post['owner']
+                'name' => $post['name_product'], 
+                'price' => $post['price'],
+                'stock' => $post['stock'],
+                'type_product' => $post['type_product']
             ]);
-            if ($contact) {
-                header('Location: '.BASEURL.'dashboard/product');
+            if ($product) {
+                header('Location: '.BASEURL.'dashboard/');
             }
             else {
                 header('Location: '.BASEURL.'product/edit?id='.$_GET['id'].'&editFailed=true');
@@ -75,9 +85,10 @@ class ProductController {
             exit;
         }
         else {
-            $contact = Product::delete($_GET['id']);
-            if ($contact) {
-                header('Location: '.BASEURL.'dashboard/product');
+            $product = Product::delete($_GET['id']);
+            var_dump($product);
+            if ($product) {
+                header('Location: '.BASEURL.'dashboard');
             }
             else {
                 header('Location: '.BASEURL.'dashboard/product?removeFailed=true');

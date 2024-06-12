@@ -71,7 +71,7 @@ class User {
         global $conn;
     
         // Periksa apakah data yang diperlukan telah diberikan
-        if (!isset($data['username'], $data['email'], $data['password'])) {
+        if (!isset($data['username'], $data['email'], $data['password'], $data['role'])) {
             die('Error: Data is missing.');
         }
     
@@ -79,12 +79,13 @@ class User {
         $name = $data['username'];
         $email = $data['email'];
         $password = $data['password'];
+        $role = $data['role'];
     
         // Hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
         // Buat dan persiapkan statement SQL
-        $sql = "INSERT INTO users SET username = ?, email = ?, password = ?";
+        $sql = "INSERT INTO users SET username = ?, email = ?, password = ?, role = ?";
         $stmt = $conn->prepare($sql);
     
         // Periksa apakah statement berhasil dipersiapkan
@@ -93,7 +94,7 @@ class User {
         }
     
         // Bind parameters
-        $stmt->bind_param('sss', $name, $email, $hashedPassword);
+        $stmt->bind_param('ssss', $name, $email, $hashedPassword, $role);
     
         // Eksekusi statement
         $stmt->execute();
@@ -101,6 +102,36 @@ class User {
         $result = $stmt->affected_rows > 0 ? true : false;
     
         return $result;
+    }
+
+    static function select($role = '')
+    {
+        global $conn;
+        $sql = "SELECT uid_user as id, username, email FROM users";
+        
+        // Check if role is provided
+        if ($role != '') {
+            $sql .= " WHERE role = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $role); // "s" indicates the type is string
+        } else {
+            $stmt = $conn->prepare($sql);
+        }
+    
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = [];
+        
+        // Fetch all results
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        
+        $stmt->close();
+        $conn->close();
+        return $rows;
     }
     
 

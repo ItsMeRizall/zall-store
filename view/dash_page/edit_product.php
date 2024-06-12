@@ -1,5 +1,13 @@
 <?php
 $user = $_SESSION['user'];
+
+if (isset($product)){
+    var_dump($product);
+    var_dump($_SESSION['user']);
+}else{
+    var_dump("gaada");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +33,7 @@ $user = $_SESSION['user'];
   <div class="wrapper-all">
     <div class="sidebar">
       <div class="top">
-        <div class="title">
+      <div class="title">
           <img src="<?= BASEURL ?>img/logo-movil.png" alt="logo" />
           <h2>Zall Store</h2>
         </div>
@@ -36,18 +44,10 @@ $user = $_SESSION['user'];
           </li>
 
           <li>
-            <a href="<?= BASEURL; ?>product"><img src="<?= BASEURL; ?>/img/ico3.png" /><span>Product</span></a>
+            <a href="<?= BASEURL; ?>dashboard"><img src="<?= BASEURL; ?>/img/ico3.png" /><span>Product</span></a>
           </li>
           <li>
-            <a href="<?= BASEURL; ?>view-admin"><img src="<?= BASEURL; ?>/img/ico3.png" /><span>Admin</span></a>
-          </li>
-          <li>
-            <a href="#"><img src="<?= BASEURL; ?>/img/ico7.png" /><span>Add
-                Product</span>
-            </a>
-          </li>
-          <li>
-            <a href="<?= BASEURL; ?>add-admin"><img src="<?= BASEURL; ?>/img/ico7.png" /><span>Add Admin</span>
+            <a href="#"><img src="<?= BASEURL; ?>/img/ico7.png" /><span>Edit Product</span>
             </a>
           </li>
         </ul>
@@ -71,12 +71,12 @@ $user = $_SESSION['user'];
     <div class="main-content ">
       <div class="p-10 bg-white">
         <h2 class="font-bold text-3xl">Halo <?= $user['username']; ?> 👋🏼</h2>
-        <h3 class="font-bold mt-4 mb-4 text-lg">ADD PRODUCT</h3>
-        <form method="post" action="<?= urlpath('dashboard/add-product'); ?>" enctype="multipart/form-data">
+        <h3 class="font-bold mt-4 mb-4 text-lg">Edit PRODUCT</h3>
+        <form method="post" action="<?= urlpath('dashboard/edit-product?id='.$_GET["id"]); ?>" enctype="multipart/form-data">
           <div class="mb-6">
             <label for="name_product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
               Product</label>
-            <input type="text" id="Nama" name="name_product"
+            <input type="text" id="Nama" name="name_product" value="<?=$product[0]["nama"]?>"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-10/12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Nama Product" required />
           </div>
@@ -84,19 +84,19 @@ $user = $_SESSION['user'];
             <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga</label>
             <input type="number" id="Harga" name="price"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-10/12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Harga Product" required />
+              placeholder="Harga Product" value="<?=$product[0]["harga"]?>" required />
           </div>
           <div class="mb-6">
             <label for="stock" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
             <input type="number" id="stock" name="stock"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-10/12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Stock" required />
+              placeholder="Stock" value="<?=$product[0]["stock"]?>" required />
           </div>
           <div class="mb-6">
             <label for="type_product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type</label>
             <input type="text" id="Type" name="type_product"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-10/12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Type Product" required />
+              placeholder="Type Product" value="<?=$product[0]["type"]?>" required />
           </div>
           <div class="mb-6">
             <span>Gambar Product</span>
@@ -119,21 +119,21 @@ $user = $_SESSION['user'];
 </body>
 
 <script>
-  document.getElementById("imageInput").addEventListener("change", function () {
+document.getElementById("imageInput").addEventListener("change", function() {
     var imagePreview = document.getElementById("imagePreview");
     var file = this.files[0];
 
     if (file && file.type.startsWith("image/")) {
-      var reader = new FileReader();
+        var reader = new FileReader();
 
-      reader.onload = function (e) {
-        imagePreview.style.backgroundImage = `url(${e.target.result})`;
-      };
+        reader.onload = function(e) {
+            imagePreview.style.backgroundImage = `url(${e.target.result})`;
+        };
 
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
     }
-  });
+});
 
-</script>
+    </script>
 
 </html>

@@ -1,10 +1,10 @@
 <?php
-class Product
+class Order
 {
     static function select($id = '')
     {
         global $conn;
-        $sql = "SELECT id, name_product as nama, price as harga, stock as stok, type_product as kategori FROM product";
+        $sql = "SELECT orders.order_id, orders.id_game, orders.server, product.name_product, product.type_product, orders.status, orders.created_at FROM orders INNER JOIN product ON orders.product_id = product.id";
         if ($id != '') {
             $sql .= " WHERE id = $id";
         }
@@ -24,9 +24,9 @@ class Product
     {
         extract($data);
         global $conn;
-        $sql = "INSERT INTO product SET name_product = ?, price = ?, stock = ?, type_product = ?";
+        $sql = "INSERT INTO orders SET product_id = ?, uid_user = ?, status = ?, id_game = ? , server = ? , payment = ?, nickname = ?, no_hp = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('siis', $name, $price, $stock, $type_product);
+        $stmt->bind_param('iissssss', $product_id, $uid_user, $status, $id_game, $server, $payment, $nickname, $no_hp);        
         $stmt->execute();
 
         $result = $stmt->affected_rows > 0 ? true : false;
@@ -74,7 +74,7 @@ class Product
             }
         }
         $result->free();
-        $conn->close();
         return $rows;
     }
+
 }

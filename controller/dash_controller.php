@@ -1,6 +1,8 @@
 <?php
 
 include_once './model/product_model.php';
+include_once './model/order_model.php';
+include_once './model/user_model.php';
 
 class DashboardController {
     static function index() {
@@ -11,12 +13,59 @@ class DashboardController {
         else {
             view('dash_page/home', [
                 'url' => 'home',
-                'product' => Product::rawQuery("SELECT name_product as nama, price as harga, stock, type_product as type, image_product as path_image FROM product")
+                'product' => Product::rawQuery("SELECT id as id_product, name_product as nama, price as harga, stock, type_product as type FROM product WHERE deleted_at IS NULL")
             ]);
         }
     }
+    
+    static function dashboard_owner() {
+        global $conn;
+        if (!isset($_SESSION['user'])) {
+            header('Location: '.BASEURL.'login?auth=false');
+            exit;
+        }
+        else {
+            view('dash_page/dashboard_owner', [
+                'url' => 'home',
+                'total_order' => Order::rawQuery("SELECT COUNT(*) as total FROM orders"),
+                'order_pending' => Order::rawQuery("SELECT COUNT(*) as total FROM orders WHERE status = 'pending'"),
+                'order_succces' => Order::rawQuery("SELECT COUNT(*) as total FROM orders WHERE status = 'success'"),
+                'order_history' => Order::rawQuery("SELECT orders.order_id ,orders.created_at, users.username, orders.id_game, orders.server, product.name_product, product.type_product, orders.status
+FROM orders
+INNER JOIN product ON product.id = orders.product_id
+INNER JOIN users ON users.uid_user = orders.uid_user;")
+            ]);
 
-    static function addProduct() {
+            $conn->close();
+        }
+    }
+
+
+    static function viewAddAdmin() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: '.BASEURL.'login?auth=false');
+            exit;
+        }
+        else {
+            view('dash_page/add_acc_admin', 
+            ['url' => 'add_product', 'user' => $_SESSION['user']]);
+        }
+    }
+
+    static function viewEditProduct() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: '.BASEURL.'login?auth=false');
+            exit;
+        }
+        else {
+            view('dash_page/edit_product', [
+            'url' => 'add_product', 'user' => $_SESSION['user'],
+            'product' => Product::rawQuery("SELECT id as id_product, name_product as nama, price as harga, stock, type_product as type FROM product where id = ".$_GET["id"])
+        ]);
+        }
+    }
+
+    static function viewAddProduct() {
         if (!isset($_SESSION['user'])) {
             header('Location: '.BASEURL.'login?auth=false');
             exit;
@@ -24,6 +73,18 @@ class DashboardController {
         else {
             view('dash_page/add_product', 
             ['url' => 'add_product', 'user' => $_SESSION['user']]);
+        }
+    }
+    static function viewDataAdmin() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: '.BASEURL.'login?auth=false');
+            exit;
+        }
+        else {
+            view('dash_page/admin', 
+            ['url' => 'add_product', 'user' => $_SESSION['user'], 
+        'admin_account' => User::select("admin")
+        ]); 
         }
     }
 

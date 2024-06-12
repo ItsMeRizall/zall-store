@@ -34,7 +34,8 @@ class AuthController {
         $user = User::register([
             'username' => $post['username'], 
             'email' => $post['email'], 
-            'password' => $post['password']
+            'password' => $post['password'],
+            'role' => 'user'
         ]);
 
         var_dump($post);
@@ -45,6 +46,26 @@ class AuthController {
         }
         else {
             header('Location: '.BASEURL.'register?failed=true');
+        }
+    }
+    static function saveAdminAccount() {
+        $post = array_map('htmlspecialchars', $_POST);
+
+        $user = User::register([
+            'username' => $post['username'], 
+            'email' => $post['email'], 
+            'password' => $post['password'],
+            'role' => 'admin'
+        ]);
+
+        var_dump($post);
+        var_dump($user);
+
+        if ($user) {
+            header('Location: '.BASEURL.'add-admin');
+        }
+        else {
+            header('Location: '.BASEURL.'add-admin?failed=true');
         }
     }
 
