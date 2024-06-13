@@ -86,12 +86,11 @@ class ProductController {
         }
         else {
             $product = Product::delete($_GET['id']);
-            var_dump($product);
             if ($product) {
-                header('Location: '.BASEURL.'dashboard');
+                header('Location: '.BASEURL.'product');
             }
             else {
-                header('Location: '.BASEURL.'dashboard/product?removeFailed=true');
+                header('Location: '.BASEURL.'product/product?removeFailed=true');
             }
         }
     }

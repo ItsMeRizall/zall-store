@@ -41,8 +41,8 @@ class order_controller_customer
                 'no_hp' => $post['no_hp'],
             ]);
 
-            if ($product) {
-                header('Location: ' . BASEURL . 'order?orderSuccess=true');
+            if ($product['result']) {
+                header('Location: ' . BASEURL . 'payment/page?id='. $product['order_id']);
             } else {
                 header('Location: ' . BASEURL . 'order?orderfailed=true');
             }

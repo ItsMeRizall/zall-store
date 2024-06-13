@@ -50,7 +50,7 @@ $user = $_SESSION['user'];
           </li>
         </ul>
       </div>
-      <a href="<?= urlpath('dashboard/logout'); ?>">
+      <a href="<?= urlpath('logout'); ?>">
         <div class="account">
           <div class="profile">
             <img src="<?= BASEURL ?>img/profile.jpg" alt="image">
@@ -83,6 +83,9 @@ $user = $_SESSION['user'];
           if (isset($admin_account)) {
             $i = 1;
             foreach ($admin_account as $p) {
+              if ($p['status'] == 'active') {
+
+              
               ?>
               <tbody>
                 <td><?= $i ?></td>
@@ -97,6 +100,7 @@ $user = $_SESSION['user'];
                 </td>
               </tbody>
               <?php
+              }
               $i++;
             }
           }
@@ -195,7 +199,7 @@ $user = $_SESSION['user'];
     confirmDeleteButton.parentNode.replaceChild(newButton, confirmDeleteButton);
 
     newButton.addEventListener('click', function () {
-      const urlPath = `product/remove?id=${a}`;  // Assuming `a` is the product ID
+      const urlPath = `admin/remove?id=${a}`;  // Assuming `a` is the product ID
       window.location.href = urlPath;
     });
   }

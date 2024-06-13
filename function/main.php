@@ -1,4 +1,11 @@
 <?php
+
+$roleRoutes = [
+    'admin' => 'admin',
+    'user' => 'homepage',
+    'owner' => 'dashboard',
+];
+
 function view($page, $data=[]) {
     extract($data);
     include 'view/'.$page.'.php';
@@ -33,10 +40,25 @@ class Router {
     }
 }
 
+function redirectBasedOnRole($role, $roleRoutes)
+{
+    if (isset($roleRoutes[$role])) {
+        header('Location: ' . BASEURL . $roleRoutes[$role]);
+        exit;
+    } else {
+        // Default action jika peran tidak ditemukan
+        header('Location: ' . BASEURL . 'login?auth=false');
+        exit;
+    }
+}
+
+
 function urlpath($path) {
     require_once 'config/static.php';
     return BASEURL.$path;
 }
+
+
 
 function freshdb() {
     require_once 'model/user_model.php';

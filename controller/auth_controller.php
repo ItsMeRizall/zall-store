@@ -21,7 +21,14 @@ class AuthController {
         if ($user) {
             unset($user['password']);
                 $_SESSION['user'] = $user;
-                header('Location: '.BASEURL.'dashboard');
+                $role = $_SESSION['user']['role'];
+                if ($role === 'admin'){
+                    header('Location: '.BASEURL.'admin');
+                } elseif ($role === 'owner' ) {
+                    header('Location: '.BASEURL.'dashboard');
+                } elseif ($role === 'user') {
+                    header('Location: '.BASEURL.'homepage');
+                }
             }
             else {
             header('Location: '.BASEURL.'login?failed=true');

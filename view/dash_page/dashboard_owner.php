@@ -49,7 +49,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="<?= urlpath('dashboard/logout'); ?>">
+            <a href="<?= urlpath('logout'); ?>">
                 <div class="account">
                     <div class="profile">
                         <img src="<?= BASEURL ?>img/profile.jpg" alt="image">
@@ -143,6 +143,7 @@
                             <th>ID Game</th>
                             <th>Product</th>
                             <th>Type Product</th>
+                            <th>Diproses Oleh</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -169,6 +170,7 @@
                                     <td><?= $p['id_game'] . " (" . $p['server'] . ")" ?></td>
                                     <td><?= $p['name_product']; ?></td>
                                     <td><?= $p['type_product']; ?></td>
+                                    <td><?= $p['admin']; ?></td>
                                     <td class="">
                                         <p
                                             class="<?= $bgColor; ?> w-max px-4 py-2 outline outline-1 <?= $textColor; ?> rounded-md">

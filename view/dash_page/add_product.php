@@ -98,17 +98,6 @@ $user = $_SESSION['user'];
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-10/12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Type Product" required />
           </div>
-          <div class="mb-6">
-            <span>Gambar Product</span>
-            <div id="imagePreview"
-              class="relative w-10/12 bg-center bg-contain bg-no-repeat border-dotted h-32 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center">
-              <div class="absolute">
-                <div class="flex flex-col items-center"> <i class="fa fa-folder-open fa-3x text-blue-700"></i> <span
-                    id="foto_nama" class="block text-gray-400 font-normal">Attach your files here</span> </div>
-              </div> <input type="file" name="product_image" accept="image/*" class="h-full w-full opacity-0"
-                id="imageInput">
-            </div>
-          </div>
           <button type="submit"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-10/12 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
         </form>

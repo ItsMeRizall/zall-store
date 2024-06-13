@@ -31,8 +31,8 @@ async function fetchData(id, game) {
   const options = {
     method: "GET",
     headers: {
-      "X-RapidAPI-Key": "b8d1f806f3mshd7500f067d2c151p155df9jsn563706e3d417",
-      "X-RapidAPI-Host": "id-game-checker.p.rapidapi.com",
+      "x-rapidapi-key": "488210f38cmsh75d56736207dde7p1c779ajsnfa869b4dd08f",
+      "x-rapidapi-host": "id-game-checker.p.rapidapi.com",
     },
   };
   fetch(url, options)
@@ -45,7 +45,7 @@ async function fetchData(id, game) {
       } else {
         nickname.textContent = "Player Tidak Ditemukan";
       }
-      checkAllInputsFilled(); // Check inputs after nickname is fetched
+      checkAllInputsFilled();
     })
     .catch((error) => {
       console.error(error);
@@ -157,7 +157,6 @@ orderButton.addEventListener("click", function () {
   var product_confirm = document.getElementById("product-name");
   var payment_confirm = document.getElementById("payment");
   var total_confirm = document.getElementById("total");
-
 
   nickname_confirm.value = data_order["nickname"];
   id_confirm.value = data_order["idGame"];

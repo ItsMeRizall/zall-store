@@ -42,31 +42,6 @@ class User {
         }
     }
     
-
-    // static function register($data=[]) {
-    //     extract($data);
-    //     global $conn;
-
-
-        
-    //     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    //     $sql = "INSERT INTO users SET username = ?, email = ?, password = ? ";
-    //     $stmt = $conn->prepare($sql);
-    //     $stmt->bind_param('sss', $name, $email, $hashedPassword);
-    //     $stmt->execute();
-
-    //     var_dump($hashedPassword);
-
-    //     if (!$stmt) {
-    //         die('Error: ' . $conn->error);
-    //     }        
-
-    //     var_dump($data);
-
-    //     $result = $stmt->affected_rows > 0 ? true : false;
-    //     return $result;
-    // }
-
     static function register($data=[]) {
         global $conn;
     
@@ -107,7 +82,7 @@ class User {
     static function select($role = '')
     {
         global $conn;
-        $sql = "SELECT uid_user as id, username, email FROM users";
+        $sql = "SELECT uid_user as id, username, email, status FROM users";
         
         // Check if role is provided
         if ($role != '') {
@@ -148,5 +123,16 @@ class User {
 
     static function update($data=[]) {}
 
-    static function delete($id='') {}
+    static function delete($id = '')
+    {
+        global $conn;
+        $status = "inactive";
+        $sql = "UPDATE users SET status = ? WHERE uid_user = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('si', $status, $id);
+        $stmt->execute();
+
+        $result = $stmt->affected_rows > 0 ? true : false;
+        return $result;
+    }
 }
